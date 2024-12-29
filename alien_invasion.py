@@ -32,7 +32,7 @@ class AlienInvasion:
 
     self._create_fleet()
 
-    self.game_active = True
+    self.game_active = False
   
   def run_game(self):
     """Start the main loop of the game"""
