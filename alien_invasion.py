@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -33,6 +34,8 @@ class AlienInvasion:
     self._create_fleet()
 
     self.game_active = False
+
+    self.play_button = Button(self, "Play")
   
   def run_game(self):
     """Start the main loop of the game"""
@@ -56,6 +59,15 @@ class AlienInvasion:
           self._check_keydown_events(event)
         elif event.type == pygame.KEYUP:
           self._check_keyup_events(event)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+          mouse_pos = pygame.mouse.get_pos()
+          self._check_play_button(mouse_pos)
+  
+  def _check_play_button(self, mouse_pos):
+    """Start a new game when the player clicks Play."""
+    button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+    if button_clicked and not self.game_active:
+      self._start_game()
 
   def _check_keydown_events(self, event):
     """Respond to keypresses."""
@@ -67,6 +79,9 @@ class AlienInvasion:
       sys.exit()
     elif event.key == pygame.K_SPACE:
       self._fire_bullet()
+    elif event.key == pygame.K_p:
+      if not self.game_active:
+        self._start_game()
 
   def _check_keyup_events(self, event):
     """Respond to key releases."""
@@ -74,6 +89,19 @@ class AlienInvasion:
       self.ship.moving_right = False
     elif event.key == pygame.K_LEFT:
       self.ship.moving_left = False
+
+  def _start_game(self):
+    """Start a new game"""
+    self.stats.reset_stats()
+    self.game_active = True
+
+    self.bullets.empty()
+    self.aliens.empty()
+
+    self._create_fleet()
+    self.ship.center_ship()
+
+    pygame.mouse.set_visible(False)
   
   def _fire_bullet(self):
     """Create a new bullet and add it to the bullets group."""
@@ -128,6 +156,7 @@ class AlienInvasion:
       sleep(0.5)
     else:
       self.game_active = False
+      pygame.mouse.set_visible(True)
 
   def _create_fleet(self):
     """Create the fleet of aliens"""
@@ -182,6 +211,9 @@ class AlienInvasion:
       bullet.draw_bullet()
     self.ship.blitme()
     self.aliens.draw(self.screen)
+
+    if not self.game_active:
+      self.play_button.draw_button()
 
     pygame.display.flip()
 
