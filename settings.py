@@ -43,7 +43,7 @@ class Settings:
     self.alien_points = 50
 
     # Gold settings
-    self.gold_drop_chance = 1.0
+    self.gold_drop_chance = 0.2
     self.gold_drop_speed = 2.5
 
   def increase_speed(self):

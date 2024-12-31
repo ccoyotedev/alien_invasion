@@ -1,5 +1,6 @@
 import sys
 from time import sleep
+import random
 
 import pygame
 
@@ -106,6 +107,7 @@ class AlienInvasion:
 
     self.bullets.empty()
     self.aliens.empty()
+    self.gold_coins.empty()
 
     self._create_fleet()
     self.ship.center_ship()
@@ -138,14 +140,17 @@ class AlienInvasion:
       for aliens in collisions.values():
         self.stats.score += self.settings.alien_points * len(aliens)
         for alien in aliens:
-          self._drop_coin(alien)
+          rand_no = random.uniform(0, 1.0)
+          if (rand_no < self.settings.gold_drop_chance):
+            self._drop_coin(alien)
 
       self.scoreboard.prep_score()
       self.scoreboard.check_high_score()
 
     if not self.aliens:
-      # Destroy exisiting bullets and create new fleet
+      # Destroy exisiting bullets, gold and create new fleet
       self.bullets.empty()
+      self.gold_coins.empty()
       self._create_fleet()
       self.settings.increase_speed()
       
@@ -188,6 +193,7 @@ class AlienInvasion:
 
       self.bullets.empty()
       self.aliens.empty()
+      self.gold_coins.empty()
 
       self._create_fleet()
       self.ship.center_ship()
