@@ -10,6 +10,7 @@ from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from gold_coin import GoldCoin
 
 class AlienInvasion:
   """Overall class to manage game assets and behavior."""
@@ -32,6 +33,7 @@ class AlienInvasion:
     self.ship = Ship(self)
     self.bullets = pygame.sprite.Group()
     self.aliens = pygame.sprite.Group()
+    self.gold_coins = pygame.sprite.Group()
 
     self._create_fleet()
 
@@ -48,6 +50,7 @@ class AlienInvasion:
         self.ship.update()
         self._update_bullets()
         self._update_aliens()
+        self._update_gold_coins()
   
       self._update_screen()
       self.clock.tick(60)
@@ -134,6 +137,9 @@ class AlienInvasion:
     if collisions:
       for aliens in collisions.values():
         self.stats.score += self.settings.alien_points * len(aliens)
+        for alien in aliens:
+          self._drop_coin(alien)
+
       self.scoreboard.prep_score()
       self.scoreboard.check_high_score()
 
@@ -146,6 +152,13 @@ class AlienInvasion:
       self.stats.level += 1
       self.scoreboard.prep_level()
 
+  def _drop_coin(self, alien):
+    """Handle the dropping of coins"""
+    gold_coin = GoldCoin(self)
+    gold_coin.rect.centerx = alien.rect.centerx
+    gold_coin.y = alien.rect.centery
+    self.gold_coins.add(gold_coin)
+
   def _update_aliens(self):
     """Update the positions of all aliens in the fleet"""
     self._check_fleet_edges()
@@ -157,6 +170,15 @@ class AlienInvasion:
 
     # Look for aliens hitting the bottom of the screen
     self._check_aliens_bottom()
+
+  def _update_gold_coins(self):
+    """Update the positions of gold coins"""
+    self.gold_coins.update()
+
+     # Get rid of gold coins that have left the screen
+    for gold_coin in self.gold_coins.copy():
+      if gold_coin.rect.bottom <= 0:
+        self.gold_coins.remove(gold_coin)
 
   def _ship_hit(self):
     """Respond to the ship being hit by an alien."""
@@ -226,6 +248,8 @@ class AlienInvasion:
     self.screen.fill(self.settings.bg_color)
     for bullet in self.bullets.sprites():
       bullet.draw_bullet()
+    for gold_coin in self.gold_coins.sprites():
+      gold_coin.draw_gold_coin()
     self.ship.blitme()
     self.aliens.draw(self.screen)
 

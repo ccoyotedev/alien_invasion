@@ -20,6 +20,10 @@ class Settings:
     # Alien settings
     self.fleet_drop_speed = 10
 
+    # Gold settings
+    self.gold_color = (255, 255, 0)
+    self.gold_radius = 8
+
     # How quickly the game speeds up
     self.speedup_scale = 1.5
     # How quickly the alien point values increase
@@ -29,7 +33,7 @@ class Settings:
 
   def initialize_dynamic_settings(self):
     """Initialize settings that change throughout the game"""
-    self.ship_speed = 1.5
+    self.ship_speed = 2.0
     self.bullet_speed = 2.5
     self.alien_speed = 2.0
     # fleet_direction of 1 represents right; -1 represents left
@@ -37,6 +41,10 @@ class Settings:
 
     # Scoring settings
     self.alien_points = 50
+
+    # Gold settings
+    self.gold_drop_chance = 1.0
+    self.gold_drop_speed = 2.5
 
   def increase_speed(self):
     """Increase speed settings."""
