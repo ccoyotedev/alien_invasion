@@ -130,8 +130,10 @@ class AlienInvasion:
       self.bullets, self.aliens, True, True
     )
     if collisions:
-      self.stats.score += self.settings.alien_points
+      for aliens in collisions.values():
+        self.stats.score += self.settings.alien_points * len(aliens)
       self.scoreboard.prep_score()
+      self.scoreboard.check_high_score()
 
     if not self.aliens:
       # Destroy exisiting bullets and create new fleet
