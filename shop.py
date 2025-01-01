@@ -1,6 +1,8 @@
 from button import Button
 from shop_item import ShopItem
 
+from items import items
+
 class Shop:
   """A class to represent the shop"""
 
@@ -19,10 +21,13 @@ class Shop:
 
   def prep_shop_cards(self):
     """Prepares UI for the shop items"""
-    for card_no in range(3):
-      shop_item = ShopItem(self.ai_game, f"Card {card_no}", "Description on card", card_no + 1)
+    for index, item in enumerate(items.items()):
+      item_name = item[0]
+      item_details = item[1]
+
+      shop_item = ShopItem(self.ai_game, item_name, item_details["description"], item_details['cost'])
       x_coord_start = self.screen_rect.centerx - shop_item.width - 12
-      x_coord = x_coord_start + card_no * ( shop_item.width + 12 )
+      x_coord = x_coord_start + index * ( shop_item.width + 12 )
       shop_item.position_card(x_coord, self.screen_rect.centery)
       self.shop_items.append(shop_item)
 
