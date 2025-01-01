@@ -212,6 +212,7 @@ class AlienInvasion:
     """End the current wave and enter the shop"""
     self.bullets.empty()
     self.gold_coins.empty()
+    self.shop.prep_shop_cards()
     self.shop_active = True
     self.game_active = False
     pygame.mouse.set_visible(True)

@@ -13,7 +13,6 @@ class Shop:
     self.screen_rect = self.screen.get_rect()
     self.settings = ai_game.settings
     self.stats = ai_game.stats
-
     self.shop_items = []
 
     self._prep_resume_button()
@@ -21,11 +20,14 @@ class Shop:
 
   def prep_shop_cards(self):
     """Prepares UI for the shop items"""
+    self.shop_items = []
+
     for index, item in enumerate(items.items()):
       item_name = item[0]
       item_details = item[1]
 
-      shop_item = ShopItem(self.ai_game, item_name, item_details["description"], item_details['cost'])
+      shop_item = ShopItem(
+        self.ai_game, item_name, item_details["description"], item_details['cost'], item_details["attributes"])
       x_coord_start = self.screen_rect.centerx - shop_item.width - 12
       x_coord = x_coord_start + index * ( shop_item.width + 12 )
       shop_item.position_card(x_coord, self.screen_rect.centery)
