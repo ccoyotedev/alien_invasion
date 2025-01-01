@@ -3,7 +3,7 @@ import pygame.font
 class Card:
   """A class to build cards for the game"""
 
-  def __init__(self, ai_game, title, description):
+  def __init__(self, ai_game, title, description, details):
     """Initialize card attributes"""
     self.screen = ai_game.screen
     self.screen_rect = self.screen.get_rect()
@@ -14,21 +14,27 @@ class Card:
 
     title_size = 32
     description_size = 24
+    details_size = 24
+
     self.title_font = pygame.font.SysFont(None, title_size)
     self.description_font = pygame.font.SysFont(None, description_size)
+    self.details_font = pygame.font.SysFont(None, details_size)
 
     self.rect = pygame.Rect(0, 0, self.width, self.height)
     self.rect.center = self.screen_rect.center
 
-    self._prep_text(title, description)
+    self._prep_text(title, description, details)
 
-  def _prep_text(self, title, description):
+  def _prep_text(self, title, description, details):
     """Turn text into a rendered image and center text on the card"""
     self.title_image = self.title_font.render(title, True, self.text_color, self.card_color)
     self.title_image_rect = self.title_image.get_rect()
     
     self.description_image = self.description_font.render(description, True, self.text_color, self.card_color)
     self.description_image_rect = self.description_image.get_rect()
+
+    self.details_image = self.details_font.render(details, True, self.text_color, self.card_color)
+    self.details_image_rect = self.details_image.get_rect()
     
     self._position_text()
 
@@ -37,7 +43,11 @@ class Card:
     """Position text on the card"""
     self.title_image_rect.centerx = self.rect.centerx
     self.title_image_rect.top = self.rect.top + 16
+
     self.description_image_rect.center = self.rect.center
+
+    self.details_image_rect.centerx = self.rect.centerx
+    self.details_image_rect.bottom = self.rect.bottom - 16
 
 
   def draw_card(self):
@@ -45,6 +55,7 @@ class Card:
     self.screen.fill(self.card_color, self.rect)
     self.screen.blit(self.title_image, self.title_image_rect)
     self.screen.blit(self.description_image, self.description_image_rect)
+    self.screen.blit(self.details_image, self.details_image_rect)
 
   def position_card(self, x_coord, y_coord):
     """Position card on screen"""

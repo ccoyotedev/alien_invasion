@@ -20,7 +20,7 @@ class Shop:
   def prep_shop_cards(self):
     """Prepares UI for the shop items"""
     for card_no in range(3):
-      card = Card(self.ai_game, f"Card {card_no}", "Description on card")
+      card = Card(self.ai_game, f"Card {card_no}", "Description on card", f"Cost {card_no + 1}")
       x_coord_start = self.screen_rect.centerx - card.width - 12
       x_coord = x_coord_start + card_no * ( card.width + 12 )
       card.position_card(x_coord, self.screen_rect.centery)
