@@ -12,6 +12,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from gold_coin import GoldCoin
+from shop import Shop
 
 class AlienInvasion:
   """Overall class to manage game assets and behavior."""
@@ -30,6 +31,7 @@ class AlienInvasion:
 
     self.stats = GameStats(self)
     self.scoreboard = Scoreboard(self)
+    self.shop = Shop(self)
 
     self.ship = Ship(self)
     self.bullets = pygame.sprite.Group()
@@ -39,6 +41,7 @@ class AlienInvasion:
     self._create_fleet()
 
     self.game_active = False
+    self.shop_active = False
 
     self.play_button = Button(self, "Play")
   
@@ -68,12 +71,19 @@ class AlienInvasion:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_pos = pygame.mouse.get_pos()
           self._check_play_button(mouse_pos)
+          self._check_resume_button(mouse_pos)
   
   def _check_play_button(self, mouse_pos):
     """Start a new game when the player clicks Play."""
     button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-    if button_clicked and not self.game_active:
+    if button_clicked and not self.game_active and not self.shop_active:
       self._start_game()
+
+  def _check_resume_button(self, mouse_pos):
+    """Start next wave when resume button is clicked."""
+    button_clicked = self.shop.resume_button.rect.collidepoint(mouse_pos)
+    if button_clicked and self.shop_active:
+      self._start_wave()
 
   def _check_keydown_events(self, event):
     """Respond to keypresses."""
@@ -116,7 +126,7 @@ class AlienInvasion:
   
   def _fire_bullet(self):
     """Create a new bullet and add it to the bullets group."""
-    if len(self.bullets) < self.settings.bullets_allowed:
+    if self.game_active and len(self.bullets) < self.settings.bullets_allowed:
       new_bullet = Bullet(self)
       self.bullets.add(new_bullet)
   
@@ -148,14 +158,7 @@ class AlienInvasion:
       self.scoreboard.check_high_score()
 
     if not self.aliens:
-      # Destroy exisiting bullets, gold and create new fleet
-      self.bullets.empty()
-      self.gold_coins.empty()
-      self._create_fleet()
-      self.settings.increase_speed()
-      
-      self.stats.level += 1
-      self.scoreboard.prep_level()
+      self._end_wave()
 
   def _drop_coin(self, alien):
     """Handle the dropping of coins"""
@@ -192,6 +195,27 @@ class AlienInvasion:
         self.stats.gold += 1
         self.scoreboard.prep_gold()
 
+  def _end_wave(self):
+    """End the current wave and enter the shop"""
+    self.bullets.empty()
+    self.gold_coins.empty()
+    self.shop_active = True
+    self.game_active = False
+    pygame.mouse.set_visible(True)
+
+  def _start_wave(self):
+    """Start next wave"""
+    self._create_fleet()
+    self.settings.increase_speed()
+    
+    self.stats.level += 1
+    self.scoreboard.prep_level()
+    self.shop_active = False
+    self.game_active = True
+    self.ship.center_ship()
+
+    pygame.mouse.set_visible(False)
+
   def _ship_hit(self):
     """Respond to the ship being hit by an alien."""
     if self.stats.ships_left > 0:
@@ -217,15 +241,13 @@ class AlienInvasion:
     alien = Alien(self)
     alien_width, alien_height = alien.rect.size
 
-    current_x, current_y = alien_width, alien_height,
-    while current_y < (self.settings.screen_height - 3 * alien_height):
+    current_x = alien_width
+    for current_row in range(self.settings.max_fleet_rows):
       while current_x < (self.settings.screen_width - 2 * alien_width):
-        self._create_alien(current_x, current_y)
+        self._create_alien(current_x, (current_row + 1) * alien_height)
         current_x += 2 * alien_width
       
-      # Finished a row; reset x value and increment y
       current_x = alien_width
-      current_y += alien_height
   
   def _create_alien(self, x_position, y_position):
     """Create an alien and place it in the row"""
@@ -268,10 +290,17 @@ class AlienInvasion:
 
     self.scoreboard.show_score()
 
-    if not self.game_active:
+    if not self.game_active and not self.shop_active:
       self.play_button.draw_button()
 
+    if self.shop_active:
+      self._update_shop_screen()
+
     pygame.display.flip()
+
+  def _update_shop_screen(self):
+    """Update the screen with the shop"""
+    self.shop.show_shop()
 
 if __name__ == '__main__':
   # Make a game instance, and run the game

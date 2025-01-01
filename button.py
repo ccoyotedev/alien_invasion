@@ -28,3 +28,9 @@ class Button:
     """Draw blank button and then draw message"""
     self.screen.fill(self.button_color, self.rect)
     self.screen.blit(self.msg_image, self.msg_image_rect)
+
+  def position_button(self, x_coord, y_coord):
+    """Position button on screen"""
+    self.rect.centerx = x_coord
+    self.rect.bottom = y_coord
+    self.msg_image_rect.center = self.rect.center
