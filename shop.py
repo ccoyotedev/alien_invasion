@@ -1,5 +1,5 @@
 from button import Button
-from card import Card
+from shop_item import ShopItem
 
 class Shop:
   """A class to represent the shop"""
@@ -20,11 +20,11 @@ class Shop:
   def prep_shop_cards(self):
     """Prepares UI for the shop items"""
     for card_no in range(3):
-      card = Card(self.ai_game, f"Card {card_no}", "Description on card", f"Cost {card_no + 1}")
-      x_coord_start = self.screen_rect.centerx - card.width - 12
-      x_coord = x_coord_start + card_no * ( card.width + 12 )
-      card.position_card(x_coord, self.screen_rect.centery)
-      self.shop_items.append(card)
+      shop_item = ShopItem(self.ai_game, f"Card {card_no}", "Description on card", card_no + 1)
+      x_coord_start = self.screen_rect.centerx - shop_item.width - 12
+      x_coord = x_coord_start + card_no * ( shop_item.width + 12 )
+      shop_item.position_card(x_coord, self.screen_rect.centery)
+      self.shop_items.append(shop_item)
 
   def _prep_resume_button(self):
     """Prepares UI of the Resume button"""
@@ -35,4 +35,5 @@ class Shop:
     """Display shop UI"""
     self.resume_button.draw_button()
     for shop_item in self.shop_items:
-      shop_item.draw_card()
+      if not shop_item.is_bought:
+        shop_item.draw_card()

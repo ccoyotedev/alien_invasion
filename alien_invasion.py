@@ -71,19 +71,32 @@ class AlienInvasion:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_pos = pygame.mouse.get_pos()
           self._check_play_button(mouse_pos)
-          self._check_resume_button(mouse_pos)
+          self._check_shop_buttons(mouse_pos)
   
   def _check_play_button(self, mouse_pos):
     """Start a new game when the player clicks Play."""
     button_clicked = self.play_button.rect.collidepoint(mouse_pos)
     if button_clicked and not self.game_active and not self.shop_active:
       self._start_game()
+  
+  def _check_shop_buttons(self, mouse_pos):
+    """Handle shop clicks"""
+    if self.shop_active:
+      self._check_resume_button(mouse_pos)
+      self._check_shop_item_buttons(mouse_pos)
 
   def _check_resume_button(self, mouse_pos):
     """Start next wave when resume button is clicked."""
     button_clicked = self.shop.resume_button.rect.collidepoint(mouse_pos)
-    if button_clicked and self.shop_active:
+    if button_clicked:
       self._start_wave()
+
+  def _check_shop_item_buttons(self, mouse_pos):
+    """If shop item clicked, attempt purchase"""
+    for shop_item in self.shop.shop_items:
+      card_clicked = shop_item.rect.collidepoint(mouse_pos)
+      if card_clicked:
+        shop_item.handle_purchase()
 
   def _check_keydown_events(self, event):
     """Respond to keypresses."""
