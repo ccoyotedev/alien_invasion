@@ -2,6 +2,7 @@ import pygame.font
 from pygame.sprite import Group
 
 from ship import Ship
+from gold_coin import GoldCoin
 
 class Scoreboard:
   """A class to report scoring information"""
@@ -22,6 +23,7 @@ class Scoreboard:
     self.prep_score()
     self.prep_high_score()
     self.prep_level()
+    self.prep_gold()
     self.prep_ships()
 
   def prep_score(self):
@@ -72,11 +74,34 @@ class Scoreboard:
       ship.rect.y = 12
       self.ships.add(ship)
 
+  def prep_gold(self):
+    """Show total gold"""
+    gold_str = str(self.stats.gold)
+    self.gold_text_image = self.font.render(
+      gold_str, True, self.text_color, self.settings.bg_color
+    )
+
+    # Position the gold below the highscore
+    self.gold_rect = self.gold_text_image.get_rect()
+    self.gold_rect.centerx = self.screen_rect.centerx + 8
+    self.gold_rect.top = self.high_score_rect.bottom + 12
+
+    # Position gold coin next to score
+    self.gold_image = GoldCoin(self.ai_game)
+    self.gold_image.rect.right = self.gold_rect.left - 8
+    self.gold_image.rect.centery = self.gold_rect.centery
+
+  def _draw_gold(self):
+    """Draw gold"""
+    self.screen.blit(self.gold_text_image, self.gold_rect)
+    self.gold_image.draw_gold_coin()
+
   def show_score(self):
-    """Draw scores, level to the screen"""
+    """Draw scores, level, ships and gold to the screen"""
     self.screen.blit(self.score_image, self.score_rect)
     self.screen.blit(self.high_score_image, self.high_score_rect)
     self.screen.blit(self.level_image, self.level_rect)
+    self._draw_gold()
     self.ships.draw(self.screen)
 
   def check_high_score(self):

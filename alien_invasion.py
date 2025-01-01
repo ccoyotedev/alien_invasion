@@ -180,10 +180,17 @@ class AlienInvasion:
     """Update the positions of gold coins"""
     self.gold_coins.update()
 
-     # Get rid of gold coins that have left the screen
+    # Get rid of gold coins that have left the screen
     for gold_coin in self.gold_coins.copy():
       if gold_coin.rect.bottom <= 0:
         self.gold_coins.remove(gold_coin)
+
+    # Look for gold-ship collisions
+    collision = pygame.sprite.spritecollide(self.ship, self.gold_coins, True)
+    if collision:
+      for gold in collision:
+        self.stats.gold += 1
+        self.scoreboard.prep_gold()
 
   def _ship_hit(self):
     """Respond to the ship being hit by an alien."""
