@@ -13,6 +13,7 @@ from bullet import Bullet
 from alien import Alien
 from gold_coin import GoldCoin
 from shop import Shop
+from card import Card
 
 class AlienInvasion:
   """Overall class to manage game assets and behavior."""
@@ -212,7 +213,6 @@ class AlienInvasion:
     self.scoreboard.prep_level()
     self.shop_active = False
     self.game_active = True
-    self.ship.center_ship()
 
     pygame.mouse.set_visible(False)
 
@@ -281,6 +281,7 @@ class AlienInvasion:
   def _update_screen(self):
     """Update images on the screen, and flip to the new screen"""
     self.screen.fill(self.settings.bg_color)
+
     for bullet in self.bullets.sprites():
       bullet.draw_bullet()
     for gold_coin in self.gold_coins.sprites():

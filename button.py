@@ -32,5 +32,5 @@ class Button:
   def position_button(self, x_coord, y_coord):
     """Position button on screen"""
     self.rect.centerx = x_coord
-    self.rect.bottom = y_coord
+    self.rect.centery = y_coord
     self.msg_image_rect.center = self.rect.center
