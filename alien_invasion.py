@@ -13,7 +13,6 @@ from bullet import Bullet
 from alien import Alien
 from gold_coin import GoldCoin
 from shop import Shop
-from card import Card
 
 class AlienInvasion:
   """Overall class to manage game assets and behavior."""
