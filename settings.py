@@ -14,17 +14,17 @@ class Settings:
     # Bullet settings
     self.bullet_height = 15
     self.bullet_color = (60, 60, 60)
-    self.bullets_allowed = 5
 
     # Alien settings
     self.fleet_drop_speed = 10
+    self.max_fleet_rows = 8
 
     # Gold settings
     self.gold_color = (255, 255, 0)
     self.gold_radius = 8
 
     # How quickly the game speeds up
-    self.speedup_scale = 1.5
+    self.speedup_scale = 1.2
     # How quickly the alien point values increase
     self.score_scale = 1.5
 
@@ -32,11 +32,13 @@ class Settings:
 
   def initialize_dynamic_settings(self):
     """Initialize settings that change throughout the game"""
-    self.ship_speed = 2.0
+    self.ship_speed = 2.5
     self.bullet_speed = 5
-    self.bullet_width = 15
+    self.bullet_width = 500
+    self.bullets_allowed = 3
+
     self.alien_speed = 2.0
-    self.max_fleet_rows = 3
+    self.fleet_rows = 5
     # fleet_direction of 1 represents right; -1 represents left
     self.fleet_direction = 1
 
@@ -47,9 +49,8 @@ class Settings:
     self.gold_drop_chance = 0.2
     self.gold_drop_speed = 2.5
 
-  def increase_speed(self):
-    """Increase speed settings."""
-    self.ship_speed *= self.speedup_scale
-    self.bullet_speed *= self.speedup_scale
+  def increase_wave_difficulty(self):
+    """Increase settings to make game harder"""
     self.alien_speed *= self.speedup_scale
     self.alien_points = int(self.alien_points * self.score_scale)
+    self.fleet_rows = min(self.max_fleet_rows, self.fleet_rows + 1)

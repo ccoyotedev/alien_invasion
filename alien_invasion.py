@@ -220,7 +220,7 @@ class AlienInvasion:
   def _start_wave(self):
     """Start next wave"""
     self._create_fleet()
-    self.settings.increase_speed()
+    self.settings.increase_wave_difficulty()
     
     self.stats.level += 1
     self.scoreboard.prep_level()
@@ -255,7 +255,8 @@ class AlienInvasion:
     alien_width, alien_height = alien.rect.size
 
     current_x = alien_width
-    for current_row in range(self.settings.max_fleet_rows):
+
+    for current_row in range(self.settings.fleet_rows):
       while current_x < (self.settings.screen_width - 2 * alien_width):
         self._create_alien(current_x, (current_row + 1) * alien_height)
         current_x += 2 * alien_width

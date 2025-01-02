@@ -1,3 +1,5 @@
+import random
+
 from button import Button
 from shop_item import ShopItem
 
@@ -22,9 +24,10 @@ class Shop:
     """Prepares UI for the shop items"""
     self.shop_items = []
 
-    for index, item in enumerate(items.items()):
-      item_name = item[0]
-      item_details = item[1]
+    random_item_names = random.sample(list(items.keys()), 3)
+
+    for index, item_name in enumerate(random_item_names):
+      item_details = items[item_name]
 
       shop_item = ShopItem(
         self.ai_game, item_name, item_details["description"], item_details['cost'], item_details["attributes"])
