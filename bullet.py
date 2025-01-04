@@ -10,20 +10,28 @@ class Bullet(Sprite):
     self.screen = ai_game.screen
     self.settings = ai_game.settings
     self.color = self.settings.bullet_color
+    self.bullet_direction = 0
+    self.was_fired = True
 
     self.rect = pygame.Rect(0, 0, self.settings.bullet_width, self.settings.bullet_height)
     self.rect.midtop = ai_game.ship.rect.midtop
 
-    # Store the bullet's position as a float.
-    self.y = float(self.rect.y)
+    self.bullet_speed = self.settings.bullet_speed
+    # Store the bullet's position as a vector.
+    self.position = pygame.Vector2(float(self.rect.centerx), float(self.rect.centery))
+    self.velocity = pygame.Vector2(0, -self.bullet_speed)
 
     self.health = self.settings.bullet_piercing
 
   def update(self):
-    """Move the bullet up the screen"""
-    self.y -= self.settings.bullet_speed
-    self.rect.y = self.y
+    """Move the bullet"""
+    self.position += self.velocity
+    self.rect.x = self.position.x
+    self.rect.y = self.position.y
 
   def draw_bullet(self):
     """Draw the bullet to the screen"""
-    pygame.draw.rect(self.screen, self.color, self.rect)
+    image = pygame.Surface((self.settings.bullet_width, self.settings.bullet_height))
+    transformed_image = pygame.transform.rotate(image, self.bullet_direction)
+    self.screen.blit(transformed_image, self.rect)
+    

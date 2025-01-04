@@ -47,5 +47,19 @@ items = {
     "attributes": {
       "bullet_piercing": 1
     }
+  },
+  "Flak cannon": {
+    "description": "Adds chance of bullets on alien death",
+    "cost": 10,
+    "attributes": {
+      "shrapnel_chance": 0.1
+    }
+  },
+  "Super thrusters": {
+    "description": "Greatly increase ship speed",
+    "cost": 5,
+    "attributes": {
+      "ship_speed": 0.5
+    }
   }
 }

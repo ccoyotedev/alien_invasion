@@ -18,6 +18,7 @@ class Settings:
     # Alien settings
     self.fleet_drop_speed = 10
     self.max_fleet_rows = 8
+    self.max_alien_speed = 10
 
     # Gold settings
     self.gold_color = (255, 255, 0)
@@ -37,6 +38,7 @@ class Settings:
     self.bullet_width = 5
     self.bullets_allowed = 3
     self.bullet_piercing = 1
+    self.shrapnel_chance = 0
 
     self.alien_speed = 2.0
     self.fleet_rows = 2
@@ -53,6 +55,6 @@ class Settings:
 
   def increase_wave_difficulty(self):
     """Increase settings to make game harder"""
-    self.alien_speed *= self.speedup_scale
+    self.alien_speed = min(self.max_alien_speed, self.alien_speed * self.speedup_scale)
     self.alien_points = int(self.alien_points * self.score_scale)
     self.fleet_rows = min(self.max_fleet_rows, self.fleet_rows + 1)

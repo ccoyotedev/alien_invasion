@@ -1,6 +1,7 @@
 import sys
 from time import sleep
 import random
+import math
 
 import pygame
 
@@ -126,6 +127,7 @@ class AlienInvasion:
     self.scoreboard.prep_score()
     self.scoreboard.prep_level()
     self.scoreboard.prep_ships()
+    self.scoreboard.prep_gold()
     self.game_active = True
 
     self.bullets.empty()
@@ -136,12 +138,18 @@ class AlienInvasion:
     self.ship.center_ship()
 
     pygame.mouse.set_visible(False)
-  
+
   def _fire_bullet(self):
     """Create a new bullet and add it to the bullets group."""
-    if self.game_active and len(self.bullets) < self.settings.bullets_allowed:
+    total_fired = 0
+    for bullet in self.bullets:
+      if bullet.was_fired:
+        total_fired += 1
+
+    if self.game_active and total_fired < self.settings.bullets_allowed:
       new_bullet = Bullet(self)
       self.bullets.add(new_bullet)
+
   
   def _update_bullets(self):
     """Update position of bullets and get rid of old bullets"""
@@ -149,7 +157,7 @@ class AlienInvasion:
 
     # Get rid of bullet that have left the screen
     for bullet in self.bullets.copy():
-      if bullet.rect.bottom <= 0:
+      if bullet.rect.bottom <= 0 or bullet.rect.top >= self.settings.screen_height or bullet.rect.right <= 0 or bullet.rect.left >= self.settings.screen_width:
         self.bullets.remove(bullet)
 
     self._check_bullet_alien_collisions()
@@ -163,9 +171,7 @@ class AlienInvasion:
       for bullet, aliens in collisions.items():
         self.stats.score += self.settings.alien_points * len(aliens)
         for alien in aliens:
-          rand_no = random.uniform(0, 1.0)
-          if (rand_no < self.settings.gold_drop_chance):
-            self._drop_coin(alien)
+          self._handle_alien_hit(alien)
           
         bullet.health -= len(aliens)
         if bullet.health <= 0:
@@ -177,12 +183,34 @@ class AlienInvasion:
     if not self.aliens:
       self._end_wave()
 
+  def _handle_alien_hit(self, alien):
+    """Handle what happens when an alien is hit"""
+    gold_drop_roll = random.uniform(0, 1.0)
+    if (gold_drop_roll <= self.settings.gold_drop_chance):
+      self._drop_coin(alien)
+
+    if (self.settings.shrapnel_chance > 0):
+      shrapnel_roll = random.uniform(0, 1.0)
+      if (shrapnel_roll <= self.settings.shrapnel_chance):
+        self._fire_shrapnel(alien)
+
   def _drop_coin(self, alien):
     """Handle the dropping of coins"""
     gold_coin = GoldCoin(self)
     gold_coin.rect.centerx = alien.rect.centerx
     gold_coin.position.y, gold_coin.position.x = alien.rect.centery, alien.rect.centerx
     self.gold_coins.add(gold_coin)
+
+  def _fire_shrapnel(self, alien):
+    """Handle shrapnel"""
+    shrapnel_bullet = Bullet(self)
+    shrapnel_bullet.was_fired = False
+    angle = 360 * random.uniform(0, 1.0)
+    shrapnel_bullet.bullet_direction = angle
+    shrapnel_bullet.velocity.x = self.settings.bullet_speed * math.sin(math.radians(angle))
+    shrapnel_bullet.velocity.y = self.settings.bullet_speed * math.cos(math.radians(angle))
+    shrapnel_bullet.position.y, shrapnel_bullet.position.x = alien.rect.centery, alien.rect.centerx
+    self.bullets.add(shrapnel_bullet)
 
   def _update_aliens(self):
     """Update the positions of all aliens in the fleet"""
@@ -232,6 +260,7 @@ class AlienInvasion:
   def _start_wave(self):
     """Start next wave"""
     self.settings.increase_wave_difficulty()
+    self.ship.center_ship()
     self._create_fleet()
     
     self.stats.level += 1
