@@ -8,9 +8,9 @@ items = {
   },
   "Cannon": {
     "description": "Increase bullet width",
-    "cost": 3,
+    "cost": 5,
     "attributes": {
-      "bullet_width": 5,
+      "bullet_width": 10,
     }
   },
   "Lazer Mk15": {
@@ -29,16 +29,23 @@ items = {
   },
   "Lazer battery": {
     "description": "Increase max ammo",
-    "cost": 3,
+    "cost": 5,
     "attributes": {
       "bullets_allowed": 1
     }
   },
   "Lucky charm": {
     "description": "Increase gold drop chance",
-    "cost": 3,
+    "cost": 2,
     "attributes": {
       "gold_drop_chance": 0.05
+    }
+  },
+  "Magnet": {
+    "description": "Increase gold pickup radius",
+    "cost": 2,
+    "attributes": {
+      "gold_pickup_radius": 20
     }
   }
 }

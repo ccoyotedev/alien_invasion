@@ -24,7 +24,7 @@ class Settings:
     self.gold_radius = 8
 
     # How quickly the game speeds up
-    self.speedup_scale = 1.2
+    self.speedup_scale = 1.15
     # How quickly the alien point values increase
     self.score_scale = 1.5
 
@@ -34,11 +34,11 @@ class Settings:
     """Initialize settings that change throughout the game"""
     self.ship_speed = 2.5
     self.bullet_speed = 5
-    self.bullet_width = 500
+    self.bullet_width = 5
     self.bullets_allowed = 3
 
     self.alien_speed = 2.0
-    self.fleet_rows = 5
+    self.fleet_rows = 2
     # fleet_direction of 1 represents right; -1 represents left
     self.fleet_direction = 1
 
@@ -48,6 +48,7 @@ class Settings:
     # Gold settings
     self.gold_drop_chance = 0.2
     self.gold_drop_speed = 2.5
+    self.gold_pickup_radius = 100
 
   def increase_wave_difficulty(self):
     """Increase settings to make game harder"""

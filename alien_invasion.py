@@ -177,7 +177,7 @@ class AlienInvasion:
     """Handle the dropping of coins"""
     gold_coin = GoldCoin(self)
     gold_coin.rect.centerx = alien.rect.centerx
-    gold_coin.y = alien.rect.centery
+    gold_coin.position.y, gold_coin.position.x = alien.rect.centery, alien.rect.centerx
     self.gold_coins.add(gold_coin)
 
   def _update_aliens(self):
@@ -193,12 +193,20 @@ class AlienInvasion:
     self._check_aliens_bottom()
 
   def _update_gold_coins(self):
-    """Update the positions of gold coins"""
-    self.gold_coins.update()
-
-    # Get rid of gold coins that have left the screen
+    """Update the positions of gold coins"""    
     for gold_coin in self.gold_coins.copy():
-      if gold_coin.rect.bottom <= 0:
+      # Move gold coins towards ship if in ships pickup radius
+      direction = self.ship.position - gold_coin.position
+      magnitude = direction.magnitude()
+
+      if magnitude < self.settings.gold_pickup_radius:
+        acceleration_scale = (1 - magnitude / self.settings.gold_pickup_radius) * 2
+        gold_coin.acceleration = direction.normalize() * acceleration_scale
+      
+      gold_coin.update()
+
+      # Get rid of gold coins that have left the screen
+      if gold_coin.rect.top >= self.settings.screen_height:
         self.gold_coins.remove(gold_coin)
 
     # Look for gold-ship collisions
@@ -219,8 +227,8 @@ class AlienInvasion:
 
   def _start_wave(self):
     """Start next wave"""
-    self._create_fleet()
     self.settings.increase_wave_difficulty()
+    self._create_fleet()
     
     self.stats.level += 1
     self.scoreboard.prep_level()

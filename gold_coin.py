@@ -13,13 +13,18 @@ class GoldCoin(Sprite):
 
     self.rect = pygame.Rect(0, 0, self.settings.gold_radius * 2, self.settings.gold_radius * 2)
 
-    # Store the gold's position as a float.
-    self.y = float(self.rect.y)
+    # Store the gold's position, velocity and acceleration as a vector.
+    self.position = pygame.Vector2(float(self.rect.x), float(self.rect.y))
+    self.velocity = pygame.Vector2(0, self.settings.gold_drop_speed)
+    self.acceleration = pygame.Vector2(0, 0)
 
   def update(self):
     """Move the gold down the screen"""
-    self.y += self.settings.gold_drop_speed
-    self.rect.y = self.y
+    self.velocity += self.acceleration
+    self.position += self.velocity
+    self.rect.y = self.position.y
+    self.rect.x = self.position.x
+
 
   def draw_gold_coin(self):
     """Draw the gold to the screen"""

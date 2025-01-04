@@ -23,11 +23,11 @@ class Ship(Sprite):
   def update(self):
     """Update the ship's position based on the movement flag."""
     if self.moving_right and self.rect.right < self.screen_rect.right:
-      self.x += self.settings.ship_speed
+      self.position.x += self.settings.ship_speed
     if self.moving_left and self.rect.left > 0:
-      self.x -= self.settings.ship_speed
+      self.position.x -= self.settings.ship_speed
     
-    self.rect.x = self.x
+    self.rect.x = self.position.x
 
   def blitme(self):
     """Draw the ship at its current location"""
@@ -36,4 +36,4 @@ class Ship(Sprite):
   def center_ship(self):
     """Center the ship on the screen"""
     self.rect.midbottom = self.screen_rect.midbottom
-    self.x = float(self.rect.x)
+    self.position = pygame.Vector2(float(self.rect.centerx), float(self.rect.centery))
