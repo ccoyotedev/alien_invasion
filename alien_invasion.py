@@ -85,12 +85,20 @@ class AlienInvasion:
     if self.shop_active:
       self._check_resume_button(mouse_pos)
       self._check_shop_item_buttons(mouse_pos)
+      self._check_reroll_button(mouse_pos)
 
   def _check_resume_button(self, mouse_pos):
     """Start next wave when resume button is clicked."""
     button_clicked = self.shop.resume_button.rect.collidepoint(mouse_pos)
     if button_clicked:
+      self.settings.reroll_cost = self.settings.base_reroll_cost
       self._start_wave()
+
+  def _check_reroll_button(self, mouse_pos):
+    """Check if reroll button was clicked"""
+    button_clicked = self.shop.reroll_button.rect.collidepoint(mouse_pos)
+    if button_clicked:
+      self._reroll_shop()
 
   def _check_shop_item_buttons(self, mouse_pos):
     """If shop item clicked, attempt purchase"""
@@ -138,6 +146,16 @@ class AlienInvasion:
     self.ship.center_ship()
 
     pygame.mouse.set_visible(False)
+
+  def _reroll_shop(self):
+    """If enough gold, reroll the items in the shop and increment reroll cost"""
+    if (self.stats.gold >= self.settings.reroll_cost):
+      self.shop.prep_shop_cards()
+      self.stats.gold -= self.settings.reroll_cost
+      self.scoreboard.prep_gold()
+
+      self.settings.reroll_cost = math.ceil(self.settings.reroll_cost * self.settings.reroll_scale)
+      self.shop.prep_reroll_button()
 
   def _fire_bullet(self):
     """Create a new bullet and add it to the bullets group."""
@@ -253,6 +271,7 @@ class AlienInvasion:
     self.bullets.empty()
     self.gold_coins.empty()
     self.shop.prep_shop_cards()
+    self.shop.prep_reroll_button()
     self.shop_active = True
     self.game_active = False
     pygame.mouse.set_visible(True)

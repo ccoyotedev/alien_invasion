@@ -10,7 +10,7 @@ items = {
     "description": "Increase bullet width",
     "cost": 5,
     "attributes": {
-      "bullet_width": 10,
+      "bullet_width": 5,
     }
   },
   "Lazer Mk15": {
@@ -43,7 +43,7 @@ items = {
   },
   "Rail gun": {
     "description": "Increase bullet piercing",
-    "cost": 20,
+    "cost": 25,
     "attributes": {
       "bullet_piercing": 1
     }

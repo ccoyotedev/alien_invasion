@@ -18,7 +18,7 @@ class Bullet(Sprite):
 
     self.bullet_speed = self.settings.bullet_speed
     # Store the bullet's position as a vector.
-    self.position = pygame.Vector2(float(self.rect.centerx), float(self.rect.centery))
+    self.position = pygame.Vector2(float(self.rect.x), float(self.rect.y))
     self.velocity = pygame.Vector2(0, -self.bullet_speed)
 
     self.health = self.settings.bullet_piercing
