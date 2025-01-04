@@ -157,15 +157,19 @@ class AlienInvasion:
   def _check_bullet_alien_collisions(self):
     """Respond to bullet alien collisions"""
     collisions = pygame.sprite.groupcollide(
-      self.bullets, self.aliens, True, True
+      self.bullets, self.aliens, False, True
     )
     if collisions:
-      for aliens in collisions.values():
+      for bullet, aliens in collisions.items():
         self.stats.score += self.settings.alien_points * len(aliens)
         for alien in aliens:
           rand_no = random.uniform(0, 1.0)
           if (rand_no < self.settings.gold_drop_chance):
             self._drop_coin(alien)
+          
+        bullet.health -= len(aliens)
+        if bullet.health <= 0:
+          self.bullets.remove(bullet)
 
       self.scoreboard.prep_score()
       self.scoreboard.check_high_score()

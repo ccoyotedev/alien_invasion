@@ -15,14 +15,7 @@ items = {
   },
   "Lazer Mk15": {
     "description": "Increase bullet speed",
-    "cost": 2,
-    "attributes": {
-      "bullet_speed": 0.5,
-    }
-  },
-  "Lazer Mk15": {
-    "description": "Increase bullet speed",
-    "cost": 2,
+    "cost": 3,
     "attributes": {
       "bullet_speed": 0.5,
     }
@@ -46,6 +39,13 @@ items = {
     "cost": 2,
     "attributes": {
       "gold_pickup_radius": 20
+    }
+  },
+  "Rail gun": {
+    "description": "Increase bullet piercing",
+    "cost": 20,
+    "attributes": {
+      "bullet_piercing": 1
     }
   }
 }

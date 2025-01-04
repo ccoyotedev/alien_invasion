@@ -17,6 +17,8 @@ class Bullet(Sprite):
     # Store the bullet's position as a float.
     self.y = float(self.rect.y)
 
+    self.health = self.settings.bullet_piercing
+
   def update(self):
     """Move the bullet up the screen"""
     self.y -= self.settings.bullet_speed

@@ -36,6 +36,7 @@ class Settings:
     self.bullet_speed = 5
     self.bullet_width = 5
     self.bullets_allowed = 3
+    self.bullet_piercing = 1
 
     self.alien_speed = 2.0
     self.fleet_rows = 2
