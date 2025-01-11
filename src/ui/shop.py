@@ -1,9 +1,9 @@
 import random
 
-from button import Button
-from shop_item import ShopItem
+from src.ui.button import Button
+from src.ui.shop_item import ShopItem
 
-from items import items
+from src.config import SHOP_ITEMS
 
 class Shop:
   """A class to represent the shop"""
@@ -25,10 +25,10 @@ class Shop:
     """Prepares UI for the shop items"""
     self.shop_items = []
 
-    random_item_names = random.sample(list(items.keys()), 3)
+    random_item_names = random.sample(list(SHOP_ITEMS.keys()), 3)
 
     for index, item_name in enumerate(random_item_names):
-      item_details = items[item_name]
+      item_details = SHOP_ITEMS[item_name]
 
       shop_item = ShopItem(
         self.ai_game, item_name, item_details["description"], item_details['cost'], item_details["attributes"])

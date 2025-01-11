@@ -1,4 +1,6 @@
-items = {
+"""Configuration file for all shop items"""
+
+SHOP_ITEMS = {
   "Boosters": {
     "description": "Increase speed",
     "cost": 1,

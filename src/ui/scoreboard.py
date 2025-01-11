@@ -1,8 +1,7 @@
 import pygame.font
 from pygame.sprite import Group
 
-from ship import Ship
-from gold_coin import GoldCoin
+from src.entities import Ship, GoldCoin
 
 class Scoreboard:
   """A class to report scoring information"""

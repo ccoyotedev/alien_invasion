@@ -1,19 +1,14 @@
 import sys
 from time import sleep
-import random
 import math
 
 import pygame
 
-from settings import Settings
-from game_stats import GameStats
-from scoreboard import Scoreboard
-from button import Button
-from ship import Ship
-from bullet import Bullet
-from alien import Alien
-from gold_coin import GoldCoin
-from shop import Shop
+from src.core.settings import Settings
+from src.core.game_stats import GameStats
+from src.ui import Scoreboard, Button, Shop
+from src.entities import Ship, Bullet, Alien
+from src.utils import CollisionHandler
 
 class AlienInvasion:
   """Overall class to manage game assets and behavior."""
@@ -45,7 +40,8 @@ class AlienInvasion:
     self.shop_active = False
 
     self.play_button = Button(self, "Play")
-  
+    self.collision_handler = CollisionHandler(self)
+
   def run_game(self):
     """Start the main loop of the game"""
     while True:
@@ -178,57 +174,8 @@ class AlienInvasion:
       if bullet.rect.bottom <= 0 or bullet.rect.top >= self.settings.screen_height or bullet.rect.right <= 0 or bullet.rect.left >= self.settings.screen_width:
         self.bullets.remove(bullet)
 
-    self._check_bullet_alien_collisions()
+    self.collision_handler.check_bullet_alien_collisions()
 
-  def _check_bullet_alien_collisions(self):
-    """Respond to bullet alien collisions"""
-    collisions = pygame.sprite.groupcollide(
-      self.bullets, self.aliens, False, True
-    )
-    if collisions:
-      for bullet, aliens in collisions.items():
-        self.stats.score += self.settings.alien_points * len(aliens)
-        for alien in aliens:
-          self._handle_alien_hit(alien)
-          
-        bullet.health -= len(aliens)
-        if bullet.health <= 0:
-          self.bullets.remove(bullet)
-
-      self.scoreboard.prep_score()
-      self.scoreboard.check_high_score()
-
-    if not self.aliens:
-      self._end_wave()
-
-  def _handle_alien_hit(self, alien):
-    """Handle what happens when an alien is hit"""
-    gold_drop_roll = random.uniform(0, 1.0)
-    if (gold_drop_roll <= self.settings.gold_drop_chance):
-      self._drop_coin(alien)
-
-    if (self.settings.shrapnel_chance > 0):
-      shrapnel_roll = random.uniform(0, 1.0)
-      if (shrapnel_roll <= self.settings.shrapnel_chance):
-        self._fire_shrapnel(alien)
-
-  def _drop_coin(self, alien):
-    """Handle the dropping of coins"""
-    gold_coin = GoldCoin(self)
-    gold_coin.rect.centerx = alien.rect.centerx
-    gold_coin.position.y, gold_coin.position.x = alien.rect.centery, alien.rect.centerx
-    self.gold_coins.add(gold_coin)
-
-  def _fire_shrapnel(self, alien):
-    """Handle shrapnel"""
-    shrapnel_bullet = Bullet(self)
-    shrapnel_bullet.was_fired = False
-    angle = 360 * random.uniform(0, 1.0)
-    shrapnel_bullet.bullet_direction = angle
-    shrapnel_bullet.velocity.x = self.settings.bullet_speed * math.sin(math.radians(angle))
-    shrapnel_bullet.velocity.y = self.settings.bullet_speed * math.cos(math.radians(angle))
-    shrapnel_bullet.position.y, shrapnel_bullet.position.x = alien.rect.centery, alien.rect.centerx
-    self.bullets.add(shrapnel_bullet)
 
   def _update_aliens(self):
     """Update the positions of all aliens in the fleet"""
@@ -266,7 +213,7 @@ class AlienInvasion:
         self.stats.gold += 1
         self.scoreboard.prep_gold()
 
-  def _end_wave(self):
+  def end_wave(self):
     """End the current wave and enter the shop"""
     self.bullets.empty()
     self.gold_coins.empty()

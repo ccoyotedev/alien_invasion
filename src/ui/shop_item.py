@@ -1,4 +1,4 @@
-from card import Card
+from src.ui.card import Card
 
 class ShopItem(Card):
   """A class to manage shop items"""
