@@ -35,10 +35,10 @@ class CollisionHandler:
       if (gold_drop_roll <= self.game.settings.gold_drop_chance):
           self._drop_coin(alien)
 
-          if (self.game.settings.shrapnel_chance > 0):
-            shrapnel_roll = random.uniform(0, 1.0)
-            if (shrapnel_roll <= self.game.settings.shrapnel_chance):
-                self._fire_shrapnel(alien)
+      if (self.game.settings.shrapnel_chance > 0):
+          shrapnel_roll = random.uniform(0, 1.0)
+          if (shrapnel_roll <= self.game.settings.shrapnel_chance):
+              self._fire_shrapnel(alien)
 
     def _drop_coin(self, alien):
       """Handle the dropping of coins"""
